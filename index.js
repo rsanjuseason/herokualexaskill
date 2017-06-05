@@ -34,7 +34,7 @@ app.intent('saynumber',
 	
 		var number = request.slot('number');
 			
-	    return pg.connect(process.env.DATABASE_URL , function (client,done) {
+	    return pg.connect(process.env.DATABASE_URL , function (err,client,done) {
 			    if (err) {
 			    	console.log("not able to get connection "+ err);
 		    	}
