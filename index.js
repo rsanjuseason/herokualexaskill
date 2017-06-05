@@ -46,9 +46,10 @@ app.intent('saynumber',
 			    		if(err){
 			               console.log(err);
 			            }
+			            return response.clear().say("An error occured: ").send();
 			            done();
 			            //back(result.rows[0].firstname);
-			            return response.clear().say("An error occured: ").send();
+			            
 			            //done(); 
 			            //return result.rows[0].firstname;
 					}
