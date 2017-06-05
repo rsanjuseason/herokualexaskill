@@ -2,9 +2,11 @@ module.change_code = 1;
 'use strict';
 
 var alexa = require( 'alexa-app' );
-var pg = require('pg');
+//var pg = require('pg');
 
 var app = new alexa.app( 'skill' );
+//var Promise = require('promise');
+var pg = require("promise-pg");
 //var client = new pg.Client(process.env.DATABASE_URL);
 
 
@@ -35,40 +37,27 @@ app.intent('saynumber',
 		var number = request.slot('number');
 			
 	    //function getData(back) {
-	    return	pg.connect(process.env.DATABASE_URL , function (err,client,done) {
-			    if (err) {
+	    return	pg.connect(process.env.DATABASE_URL).spread( function (client,done) {
+			    /*if (err) {
 			    	console.log("not able to get connection "+ err);
-		    	}
+		    	}*/
 			    console.log('Connected to postgres! Getting schemas...');
 			    
-			    client.query(
-			    	'SELECT firstname,lastname,email FROM salesforce.Lead',
-			    	function(err, result) {
-			    		if(err){
-			               console.log(err);
-			            }
-			            response.say("An error occured: ");
-			            return response.send();
-			            done();
-			            //back(result.rows[0].firstname);
-			            
-			            //done(); 
-			            //return result.rows[0].firstname;
-					}
-				);
-
-			});
-		//}
-
-		/*return getData(function(data){
-			console.log(data);
-			response.say("got data " + data);
-			response.send();
-		})*/
+			    var query = client.query({
+			    	 text: "SELECT firstname,lastname,email FROM salesforce.Lead",
+       				 buffer: true 
+			    }).promise.then(
+				    	function(result) {
+				    		
+				            response.say("An error occured: ");
+				            return response.send();
+				            
+						},
+						function(err) { throw err; }
+					).finally(done);
 			    
-	}
-);
-
+				}).done();
+    }
 //app.express({ expressApp: express_app });
 
 module.exports = app;
