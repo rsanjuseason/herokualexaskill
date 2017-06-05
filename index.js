@@ -61,7 +61,8 @@ app.intent('saynumber',
 
 		return getData(function(data){
 			console.log(data);
-			return response.clear().say("got data " + data);
+			response.say("got data " + data);
+			response.send();
 		})
 			    
 	}
