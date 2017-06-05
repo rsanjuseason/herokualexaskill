@@ -1,0 +1,23 @@
+{
+  "name": "skill",
+  "version": "1.0.0",
+  "description": "\"# herokualexaskill\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsanjuseason/herokualexaskill.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rsanjuseason/herokualexaskill/issues"
+  },
+  "homepage": "https://github.com/rsanjuseason/herokualexaskill#readme",
+  "dependencies": {
+    "alexa-app": "^4.0.1"
+  },
+  "devDependencies": {}
+}
