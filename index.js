@@ -5,7 +5,7 @@ var alexa = require( 'alexa-app' );
 var pg = require('pg');
 
 var app = new alexa.app( 'skill' );
-var client = new pg.Client(process.env.DATABASE_URL);
+//var client = new pg.Client(process.env.DATABASE_URL);
 
 
 app.launch( function( request, response ) {
@@ -33,16 +33,28 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var number = request.slot('number');
+			
+	    return pg.connect(process.env.DATABASE_URL , function (client,done) {
+			    if (err) {
+			    	console.log("not able to get connection "+ err);
+		    	}
+			    console.log('Connected to postgres! Getting schemas...');
+			    
+			    client.query(
+			    	'SELECT firstname,lastname,email FROM salesforce.Lead',
+			    	function(err, result) {
+			    		if(err){
+			               console.log(err);
+			            }
+			            done();
+			            //back(result.rows[0].firstname);
+			            return response.clear().say("An error occured: ").send();
+			            //done(); 
+			            //return result.rows[0].firstname;
+					}
+				);
 
-		client.connect(process.env.DATABASE_URL);
-		client.begin();
-		client.setIsolationLevelSerializable();
-		var result = client.query("SELECT firstname,lastname,email FROM salesforce.Lead");
-		console.log(result);
-		console.log(JSON.stringify(result));
-		console.log("got it");
-		client.disconnect();
-		console.log("closed connection");
+			});
 			    
 	}
 );
