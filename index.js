@@ -38,26 +38,27 @@ app.intent('saynumber',
 			
 	    //function getData(back) {
 	    return	pg.connect(process.env.DATABASE_URL).spread( function (client,done) {
-			    /*if (err) {
-			    	console.log("not able to get connection "+ err);
-		    	}*/
-			    console.log('Connected to postgres! Getting schemas...');
-			    
-			    var query = client.query({
-			    	 text: "SELECT firstname,lastname,email FROM salesforce.Lead",
-       				 buffer: true 
-			    }).promise.then(
-				    	function(result) {
-				    		
-				            response.say("An error occured: ");
-				            return response.send();
-				            
-						},
-						function(err) { throw err; }
-					).finally(done);
-			    
+				    /*if (err) {
+				    	console.log("not able to get connection "+ err);
+			    	}*/
+				    console.log('Connected to postgres! Getting schemas...');
+				    
+				    var query = client.query({
+				    	 text: "SELECT firstname,lastname,email FROM salesforce.Lead",
+	       				 buffer: true 
+				    }).promise.then(
+					    	function(result) {
+					    		
+					            response.say("An error occured: ");
+					            return response.send();
+					            
+							},
+							function(err) { throw err; }
+						).finally(done);
+				    
 				}).done();
     }
+);
 //app.express({ expressApp: express_app });
 
 module.exports = app;
