@@ -6,8 +6,9 @@ var alexa = require( 'alexa-app' );
 
 var app = new alexa.app( 'skill' );
 //var Promise = require('promise');
-var pg = require("promise-pg");
+var pg = require('pg');
 //var client = new pg.Client(process.env.DATABASE_URL);
+var pgClient = new pg.Client(process.env.DATABASE_URL);
 
 
 app.launch( function( request, response ) {
@@ -35,16 +36,43 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var number = request.slot('number');
-			
+
+		pgClient.connect();
+		var query = pgClient.query("SELECT firstname,lastname,email FROM salesforce.Lead");
+
+		query.on("row", function(row,result){
+
+			result.addRow(row);
+
+		});
+
+		query.on("end", function(result){
+
+			if(result.rows[0] === undefined){
+
+				return;
+
+			}
+			else{
+
+				var id = result.rows[0].id;
+
+				response.say('got my lead');
+				return;
+
+			}
+
+			pgClient.end();
+		});
 	    //function getData(back) {
-	    return	pg.connect(process.env.DATABASE_URL).spread( function (client,done) {
+	   /* return	pg.connect(process.env.DATABASE_URL).spread( function (client,done) {
 				    /*if (err) {
 				    	console.log("not able to get connection "+ err);
-			    	}*/
+			    	}***
 				    console.log('Connected to postgres! Getting schemas...');
 				    
 				    var query = client.query({
-				    	 text: "SELECT firstname,lastname,email FROM salesforce.Lead",
+				    	 text: "",
 	       				 buffer: true 
 				    }).promise.then(
 					    	function(result) {
@@ -56,7 +84,9 @@ app.intent('saynumber',
 							function(err) { throw err; }
 						).finally(done);
 				    
-				}).done();
+				}).done();*/
+
+
     }
 );
 //app.express({ expressApp: express_app });
