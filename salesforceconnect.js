@@ -1,34 +1,30 @@
 'use strict';
 
-var pg = require('pg');
+var pg = require('pg-promise');
 //var pgClient = new pg.Client(process.env.DATABASE_URL);
 
-function getData(back){
-      
-      pg.connect(process.env.DATABASE_URL , function (client,done) {
-          if (err) {
-            console.log("not able to get connection "+ err);
-          }
-          console.log('Connected to postgres! Getting schemas...');
-          
-          client.query(
-            'SELECT firstname,lastname,email FROM salesforce.Lead',
-            function(err, result) {
-              if(err){
-                     console.log(err);
-                  }
-                  done();
-                  back(result.rows[0].firstname);
+
+ 
+
+module.exports = function(){
+    return pg.connect(process.env.DATABASE_URL).spread( function (client,done) {
+            /*if (err) {
+              console.log("not able to get connection "+ err);
+            }*/
+        console.log('Connected to postgres! Getting schemas...');
+        
+        var query = client.query({
+            text: "SELECT firstname,lastname,email FROM salesforce.Lead",
+            buffer: true 
+        }).promise.then(
+            function(result) {
+              
+                  console.log(result.rows[0].firstname);
+                  return result.rows[0].firstname;
                   
-          }
-        );
-
-      });
+          },
+          function(err) { throw err; }
+        ).finally(done);
+        
+    }).done();  
 }
-    
-
-module.exports = getData(function(data){
-                        console.log('data: ' + data);
-                        return data;
-                      })
-                  }
