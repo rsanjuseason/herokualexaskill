@@ -2,6 +2,8 @@ module.change_code = 1;
 'use strict';
 
 var alexa = require( 'alexa-app' );
+var FAADataHelper = require('./salesforceconnect');
+
 //var pg = require('pg');
 
 var app = new alexa.app( 'skill' );
@@ -36,56 +38,7 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var number = request.slot('number');
-
-		pgClient.connect();
-		var query = pgClient.query("SELECT firstname,lastname,email FROM salesforce.Lead");
-
-		query.on("row", function(row,result){
-
-			result.addRow(row);
-
-		});
-
-		query.on("end", function(result){
-
-			if(result.rows[0] === undefined){
-
-				return;
-
-			}
-			else{
-
-				var id = result.rows[0].id;
-
-				response.say('got my lead');
-				return;
-
-			}
-
-			pgClient.end();
-		});
-	    //function getData(back) {
-	   /* return	pg.connect(process.env.DATABASE_URL).spread( function (client,done) {
-				    /*if (err) {
-				    	console.log("not able to get connection "+ err);
-			    	}***
-				    console.log('Connected to postgres! Getting schemas...');
-				    
-				    var query = client.query({
-				    	 text: "",
-	       				 buffer: true 
-				    }).promise.then(
-					    	function(result) {
-					    		
-					            response.say('An error occured.');
-					            return response.send();
-					            
-							},
-							function(err) { throw err; }
-						).finally(done);
-				    
-				}).done();*/
-
+		response.say('you ask for the number ' + number);
 
     }
 );
