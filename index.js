@@ -11,11 +11,12 @@ var app = new alexa.app( 'skill' );
 //var Promise = require('promise');
 //var pg = require('pg-async');
 //var async = require('asyncawait/async');
-//var await = require('asyncawait/await');
+var await = require('asyncawait/await');
 
 //var pgAsync = new pg(process.env.DATABASE_URL);
 //var client = new pg.Client(process.env.DATABASE_URL);
 //var pgClient = new pg.Client(process.env.DATABASE_URL);
+
 
 
 app.launch( function( request, response ) {
@@ -43,9 +44,20 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var number = request.slot('number');
+		console.log(FAADataHelper());
+		response.say('data ' + FAADataHelper());
 		//var data = FAADataHelper();
 		//console.log(data + ':data');
+		
+		/*client.connect(function(err) {
+			if (err) {
+				return callback(err, null);
+			}
+			
+		}
 
+		//var s = client.query("SELECT firstname,lastname,email FROM salesforce.Lead");
+		//console.log(s);*/
 		/*function getdata() {
 			return pgAsync.transaction(async (client )=> {
 			    var data;
@@ -54,48 +66,51 @@ app.intent('saynumber',
 			    
 			    return data;
 			  });
-			return pg.connect(process.env.DATABASE_URL ,
-				function (err,client,done) {
-			        if (err) {
-			            return console.log("not able to get connection "+ err);
-			        }
-			        console.log('Connected to postgres! Getting schemas...');
-			        
-			        var result = await client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
+				return pg.connect(process.env.DATABASE_URL ,
+					function (err,client,done) {
+				        if (err) {
+				            return console.log("not able to get connection "+ err);
+				        }
+				        console.log('Connected to postgres! Getting schemas...');
+				        
+				        var result = await client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
 
-			        return result;
+				        return result;
 
-		    	}
-		    );
-		}*/
-		
+			    	}
+			    );
+		}
+		//response.say(FAADataHelper.name);
 
 		getData(function(err,result){
 			console.log('result: '+ result);
-			response.say(result);
+			console.log(response.say('data'));
+				response.say('data ' + result);
 			
-		});
+			
+		}.bind(this));*/
 		
 
 		
     }
 );
+
 function getData(callback) {
 	client.connect(function(err) {
 		if (err) {
-		callback(err, null);
-		return;
+		return callback(err, null);
+		
 	}
 
-	client.query("SELECT firstname,lastname,email FROM salesforce.Lead", function (err, result) {
+	return client.query("SELECT firstname,lastname,email FROM salesforce.Lead", function (err, result) {
 		client.end();
 		if (err) {
-			callback(err, null);
-			return;
+			return callback(err, null);
+			
 		}
 
-		if (result.rows[0] == undefined) callback(null, 'Lead available.');
-		else callback(null,result.rows[0].firstname);
+		if (result.rows[0] == undefined) return callback(null, 'Lead available.');
+		else return callback(null,result.rows[0].firstname);
 		});
 	});
 };
