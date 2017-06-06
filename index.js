@@ -68,27 +68,9 @@ app.intent('saynumber',
 		    	}
 		    );
 		}*/
-		function getData(callback,request,response) {
-			  client.connect(function(err) {
-			    if (err) {
-			      callback(err, null,request,response);
-			      return;
-			    }
+		
 
-			    client.query("SELECT firstname,lastname,email FROM salesforce.Lead", function (err, result) {
-			      client.end();
-			      if (err) {
-			        callback(err, null,request,response);
-			        return;
-			      }
-
-			      if (result.rows[0] == undefined) callback(null, 'Lead available.');
-			      else callback(null,result.rows[0].firstname,request,response);
-			    });
-			  });
-		};
-
-		getData(function(err,result,request,response){
+		getData(function(err,result){
 			console.log('result: '+ result);
 			response.say(result);
 			
@@ -98,6 +80,25 @@ app.intent('saynumber',
 		
     }
 );
+function getData(callback) {
+	client.connect(function(err) {
+		if (err) {
+		callback(err, null);
+		return;
+	}
+
+	client.query("SELECT firstname,lastname,email FROM salesforce.Lead", function (err, result) {
+		client.end();
+		if (err) {
+			callback(err, null);
+			return;
+		}
+
+		if (result.rows[0] == undefined) callback(null, 'Lead available.');
+		else callback(null,result.rows[0].firstname);
+		});
+	});
+};
 //app.express({ expressApp: express_app });
 
 module.exports = app;
