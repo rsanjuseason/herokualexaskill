@@ -49,7 +49,7 @@ app.intent('saynumber',
 				    }).promise.then(
 					    	function(result) {
 					    		
-					            response.say("An error occured: ");
+					            response.say('An error occured.');
 					            return response.send();
 					            
 							},
