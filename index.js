@@ -4,13 +4,18 @@ module.change_code = 1;
 var alexa = require( 'alexa-app' );
 var FAADataHelper = require('./salesforceconnect');
 
-//var pg = require('pg');
+var pg = require('pg');
+var client = new pg.Client(process.env.DATABASE_URL);
 
 var app = new alexa.app( 'skill' );
 //var Promise = require('promise');
-var pg = require('pg');
+//var pg = require('pg-async');
+//var async = require('asyncawait/async');
+//var await = require('asyncawait/await');
+
+//var pgAsync = new pg(process.env.DATABASE_URL);
 //var client = new pg.Client(process.env.DATABASE_URL);
-var pgClient = new pg.Client(process.env.DATABASE_URL);
+//var pgClient = new pg.Client(process.env.DATABASE_URL);
 
 
 app.launch( function( request, response ) {
@@ -38,11 +43,58 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var number = request.slot('number');
-		var data = FAADataHelper();
-		console.log(data + ':data');
-		//response.say('you ask for the number ' + number);
-	 	response.say('called');
+		//var data = FAADataHelper();
+		//console.log(data + ':data');
 
+		/*function getdata() {
+			return pgAsync.transaction(async (client )=> {
+			    var data;
+			    const sql = 'SELECT firstname,lastname,email FROM salesforce.Lead';
+			    data = await client.value(sql);	
+			    
+			    return data;
+			  });
+			return pg.connect(process.env.DATABASE_URL ,
+				function (err,client,done) {
+			        if (err) {
+			            return console.log("not able to get connection "+ err);
+			        }
+			        console.log('Connected to postgres! Getting schemas...');
+			        
+			        var result = await client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
+
+			        return result;
+
+		    	}
+		    );
+		}*/
+		function getData(callback) {
+			  client.connect(function(err) {
+			    if (err) {
+			      callback(err, null);
+			      return;
+			    }
+
+			    client.query("SELECT firstname,lastname,email FROM salesforce.Lead", function (err, result) {
+			      client.end();
+			      if (err) {
+			        callback(err, null);
+			        return;
+			      }
+
+			      if (result.rows[0] == undefined) callback(null, 'Lead available.');
+			      else callback(null,result.rows[0].firstname);
+			    });
+			  });
+		};
+
+		var data  = getData(function(err,result){
+			console.log(result);
+			response.say(result).send();
+		});
+		console.log(data);
+
+		
     }
 );
 //app.express({ expressApp: express_app });

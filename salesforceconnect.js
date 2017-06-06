@@ -2,6 +2,8 @@
 
 var pg = require('pg');
 var Promise = require('promise');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 //var pgClient = new pg.Client(process.env.DATABASE_URL);
 
 function getData(){
@@ -19,6 +21,7 @@ function getData(){
                    console.log(err);
                 }
                 done();
+                console.log(result.rows[0].firstname);
                 return result.rows[0].firstname;
                 //done(); 
                 //return result.rows[0].firstname;
