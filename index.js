@@ -38,8 +38,10 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var number = request.slot('number');
+		var data = FAADataHelper();
+		console.log(data + ':data');
 		//response.say('you ask for the number ' + number);
-	 	response.say(FAADataHelper());
+	 	response.say('called');
 
     }
 );
