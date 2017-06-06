@@ -45,7 +45,14 @@ app.intent('saynumber',
 	
 		var number = request.slot('number');
 		console.log(FAADataHelper());
-		response.say('data ' + FAADataHelper());
+		var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
+        //console.log('esxp ' + result.result);
+        //var rst = query.on('end').result;
+        //console.log(rst);
+
+        //if(result.rowCount == 0) response.say('data ' +result.rowCount);*/
+        
+		response.say('data ');
 		//var data = FAADataHelper();
 		//console.log(data + ':data');
 		
