@@ -1,6 +1,7 @@
 'use strict';
 
-var pg = require('pg-promise');
+var pg = require('pg');
+var Promise = require('promise');
 //var pgClient = new pg.Client(process.env.DATABASE_URL);
 
 
