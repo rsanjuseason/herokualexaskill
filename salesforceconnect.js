@@ -6,7 +6,7 @@ var Promise = require('promise');
 
 function getData(){
             
-    pg.connect(process.env.DATABASE_URL , function (client,done) {
+    pg.connect(process.env.DATABASE_URL , function (err,client,done) {
         if (err) {
             return console.log("not able to get connection "+ err);
         }
