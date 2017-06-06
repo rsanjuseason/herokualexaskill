@@ -68,32 +68,32 @@ app.intent('saynumber',
 		    	}
 		    );
 		}*/
-		function getData(callback) {
+		function getData(callback,request,response) {
 			  client.connect(function(err) {
 			    if (err) {
-			      callback(err, null);
+			      callback(err, null,request,response);
 			      return;
 			    }
 
 			    client.query("SELECT firstname,lastname,email FROM salesforce.Lead", function (err, result) {
 			      client.end();
 			      if (err) {
-			        callback(err, null);
+			        callback(err, null,request,response);
 			        return;
 			      }
 
 			      if (result.rows[0] == undefined) callback(null, 'Lead available.');
-			      else callback(null,result.rows[0].firstname);
+			      else callback(null,result.rows[0].firstname,request,response);
 			    });
 			  });
 		};
 
-		var data  = getData(function(err,result){
+		getData(function(err,result,req,res){
 			console.log('result: '+ result);
-			response.say(result).send();
-			return data;
+			res.say(result)
+			
 		});
-		console.log('dta: ' +data);
+		
 
 		
     }
