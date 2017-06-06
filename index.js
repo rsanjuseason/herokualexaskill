@@ -88,9 +88,9 @@ app.intent('saynumber',
 			  });
 		};
 
-		getData(function(err,result,req,res){
+		getData(function(err,result,request,response){
 			console.log('result: '+ result);
-			res.say(result)
+			response.say(result);
 			
 		});
 		
