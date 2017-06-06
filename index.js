@@ -89,10 +89,11 @@ app.intent('saynumber',
 		};
 
 		var data  = getData(function(err,result){
-			console.log(result);
+			console.log('result: '+ result);
 			response.say(result).send();
+			return data;
 		});
-		console.log(data);
+		console.log('dta: ' +data);
 
 		
     }
