@@ -10,7 +10,7 @@ var client = new pg.Client(process.env.DATABASE_URL);
 var app = new alexa.app( 'skill' );
 //var Promise = require('promise');
 //var pg = require('pg-async');
-//var async = require('asyncawait/async');
+var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 //var pgAsync = new pg(process.env.DATABASE_URL);
@@ -45,15 +45,50 @@ app.intent('saynumber',
 	
 		var number = request.slot('number');
 		var FAADataHelper = require('./salesforceconnect');
-		console.log(FAADataHelper);
-		var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
+		console.log(FAADataHelper.data);
+		//var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
+
+		async (function getData(back){
+             
+		    return pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
+		        if (err) {
+		            return await (back(err));
+
+		        }else{
+		            console.log('Connected to postgres! Getting schemas...');
+		        
+		            conn.query(
+		                'SELECT firstname,lastname,email FROM salesforce.Lead',
+		                function(err, result) {
+		                    if(err){
+		                       return await(back(err));
+		                    }
+		                    done();
+		                    return await (back(result.rows[0].firstname));
+		                    //done(); 
+		                    //return result.rows[0].firstname;
+		                }
+		            );    
+		        }
+		        
+
+		    });
+		});
+
+		response.say(getData(function(data){
+								console.log('my data :' +  data);
+							    if(data != undefined) return data;
+							    return 'No result';
+							}));
+					
+		//console.log('data s : ' +s);
         //console.log('esxp ' + result.result);
         //var rst = query.on('end').result;
         //console.log(rst);
 
         //if(result.rowCount == 0) response.say('data ' +result.rowCount);*/
         
-		response.say('data ');
+		//response.say('data ');
 		//var data = FAADataHelper();
 		//console.log(data + ':data');
 		
