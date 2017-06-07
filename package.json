@@ -18,7 +18,8 @@
   "homepage": "https://github.com/rsanjuseason/herokualexaskill#readme",
   "dependencies": {
     "alexa-app": "^4.0.1",
-    "promise": "^7.1.1"
+    "promise": "^7.1.1",
+    "request-promise": "^4.2.1"
   },
   "devDependencies": {}
 }

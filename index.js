@@ -2,23 +2,12 @@ module.change_code = 1;
 'use strict';
 
 var alexa = require( 'alexa-app' );
-
+var _ = require('lodash');
 
 var pg = require('pg');
-var client = new pg.Client(process.env.DATABASE_URL);
+//var client = new pg.Client(process.env.DATABASE_URL);
 
 var app = new alexa.app( 'skill' );
-var Promise = require('promise');
-//var pg = require('pg-async');
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-
-//var pgAsync = new pg(process.env.DATABASE_URL);
-//var client = new pg.Client(process.env.DATABASE_URL);
-//var pgClient = new pg.Client(process.env.DATABASE_URL);
-
-
-
 app.launch( function( request, response ) {
 	response.say( 'Welcome to your test skill' ).reprompt( 'Way to go. You got it to run. Bad ass.' ).shouldEndSession( false );
 } );
@@ -43,59 +32,28 @@ app.intent('saynumber',
 	},
 	function(request, response) {
 	
-		var number = request.slot('number');
+		var airportCode = request.slot('number');
 		var FAADataHelper = require('./salesforceconnect');
-		console.log(FAADataHelper.data);
-
-		
-		
-		function getdata() {
-			
-			return pg.connect(process.env.DATABASE_URL ,
-				function (err,conn,done) {
-			        if (err) {
-			            return console.log("not able to get connection "+ err);
-			        }
-			        console.log('Connected to postgres! Getting schemas...');
-			        
-			        var result = await (conn.query('SELECT firstname,lastname,email FROM salesforce.Lead'));
-
-			        return result;
-
-		    	}
-		    );
-		}
-		//response.say(FAADataHelper.name);
-
-		getData(function(err,result){
-			console.log('result: '+ result);
-						
-		});
-		
-
+		var reprompt = 'Tell me an airport code to get delay information.';
+	    if (_.isEmpty(airportCode)) {
+	      var prompt = 'I didn\'t hear an airport code. Tell me an airport code.';
+	      res.say(prompt).reprompt(reprompt).shouldEndSession(false);
+	      return true;
+	    } else {
+	      var faaHelper = new FAADataHelper();
+	      faaHelper.requestAirportStatus(airportCode).then(function(airportStatus) {
+	        console.log(airportStatus);
+	        res.say(airportStatus).send();
+	      }).catch(function(err) {
+	        console.log(err.statusCode);
+	        var prompt = 'I didn\'t have data for an airport code of ' + airportCode;
+	         //https://github.com/matt-kruse/alexa-app/blob/master/index.js#L171
+	        res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+	      });
+	      return false;
+	    }
 		
     }
 );
-
-function getData(callback) {
-	client.connect(function(err) {
-		if (err) {
-		return callback(err, null);
-		
-	}
-
-	return client.query("SELECT firstname,lastname,email FROM salesforce.Lead", function (err, result) {
-		client.end();
-		if (err) {
-			return callback(err, null);
-			
-		}
-
-		if (result.rows[0] == undefined) return callback(null, 'Lead available.');
-		else return callback(null,result.rows[0].firstname);
-		});
-	});
-};
-//app.express({ expressApp: express_app });
 
 module.exports = app;
