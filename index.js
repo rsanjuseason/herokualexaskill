@@ -2,7 +2,7 @@ module.change_code = 1;
 'use strict';
 
 var alexa = require( 'alexa-app' );
-var FAADataHelper = require('./salesforceconnect');
+
 
 var pg = require('pg');
 var client = new pg.Client(process.env.DATABASE_URL);
@@ -44,6 +44,7 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var number = request.slot('number');
+		var FAADataHelper = require('./salesforceconnect');
 		console.log(FAADataHelper());
 		var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
         //console.log('esxp ' + result.result);

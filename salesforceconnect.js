@@ -10,14 +10,14 @@ var await = require('asyncawait/await');
 
 function getData(back){
             
-    pg.connect(process.env.DATABASE_URL , function (err,client,done) {
+    pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
         if (err) {
             back(err);
 
         }else{
             console.log('Connected to postgres! Getting schemas...');
         
-            client.query(
+            conn.query(
                 'SELECT firstname,lastname,email FROM salesforce.Lead',
                 function(err, result) {
                     if(err){
