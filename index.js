@@ -4,7 +4,8 @@ module.change_code = 1;
 var alexa = require( 'alexa-app' );
 var _ = require('lodash');
 
-var pg = require('pg');
+//var pg = require('pg');
+var FAADataHelper = require('./salesforceconnect');
 //var client = new pg.Client(process.env.DATABASE_URL);
 
 var app = new alexa.app( 'skill' );
@@ -33,22 +34,22 @@ app.intent('saynumber',
 	function(request, response) {
 	
 		var airportCode = request.slot('number');
-		var FAADataHelper = require('./salesforceconnect');
+		
 		var reprompt = 'Tell me an airport code to get delay information.';
 	    if (_.isEmpty(airportCode)) {
 	      var prompt = 'I didn\'t hear an airport code. Tell me an airport code.';
-	      res.say(prompt).reprompt(reprompt).shouldEndSession(false);
+	      response.say(prompt).reprompt(reprompt).shouldEndSession(false);
 	      return true;
 	    } else {
 	      var faaHelper = new FAADataHelper();
 	      faaHelper.requestAirportStatus(airportCode).then(function(airportStatus) {
 	        console.log(airportStatus);
-	        res.say(airportStatus).send();
+	        response.say(airportStatus).send();
 	      }).catch(function(err) {
 	        console.log(err.statusCode);
 	        var prompt = 'I didn\'t have data for an airport code of ' + airportCode;
 	         //https://github.com/matt-kruse/alexa-app/blob/master/index.js#L171
-	        res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+	        response.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
 	      });
 	      return false;
 	    }

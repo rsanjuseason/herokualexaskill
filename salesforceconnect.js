@@ -10,7 +10,7 @@ var rp = require('request-promise');
 //var pg = require('pg');
 //var client = new pg.Client(process.env.DATABASE_URL);
 //var pg = require("promise-pg");
-var ENDURL ='https://season-developer-edition.ap2.force.com/services/apexrest/FindCase?number='
+var ENDPOINT ='https://season-developer-edition.ap2.force.com/services/apexrest/FindCase?number='
 //var async = require('async');
 function FAADataHelper() {
 }
