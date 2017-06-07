@@ -45,7 +45,7 @@ app.intent('saynumber',
 	
 		var number = request.slot('number');
 		var FAADataHelper = require('./salesforceconnect');
-		console.log(FAADataHelper());
+		console.log(FAADataHelper);
 		var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
         //console.log('esxp ' + result.result);
         //var rst = query.on('end').result;
