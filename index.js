@@ -49,11 +49,11 @@ app.intent('saynumber',
 		//var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
 
 		async (function getData(back){
-             
-		    return pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
+            var myresult = 'initial'; 
+		    pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
 		        if (err) {
 		        	console.log('err : ' + err);
-		            return await (back(err));
+		            myresult = await (back(err));
 
 		        }else{
 		            console.log('Connected to postgres! Getting schemas...');
@@ -63,11 +63,11 @@ app.intent('saynumber',
 		                function(err, result) {
 		                    if(err){
 	                    		console.log('err1 : ' + err);
-		                       	return await(back(err));
+		                       	myresult = await(back(err));
 		                    }
 		                    done();
 		                    console.log('result: ' + result.rows[0].firstname);
-		                    return await (back(result.rows[0].firstname));
+		                    myresult = await (back(result.rows[0].firstname));
 		                    //done(); 
 		                    //return result.rows[0].firstname;
 		                }
@@ -76,15 +76,19 @@ app.intent('saynumber',
 		        
 
 		    });
+
+		    return myresult;
 		});
 
-		response.say(getData(function(data){
+		var s = getData(function(data){
 								console.log('my data :' +  data);
 							    if(data != undefined) return data;
 							    return 'No result';
-							}));
+							});
+		console.log('s: ' + s);
+		response.say('some data');
 					
-		//console.log('data s : ' +s);
+		//console.log('data s : ' +s);	
         //console.log('esxp ' + result.result);
         //var rst = query.on('end').result;
         //console.log(rst);
