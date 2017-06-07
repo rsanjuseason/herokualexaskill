@@ -47,133 +47,30 @@ app.intent('saynumber',
 		var FAADataHelper = require('./salesforceconnect');
 		console.log(FAADataHelper.data);
 
-		function doAsyncOp () {
-			var myresult = 'initial'; 
-			/*pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
-		        if (err) {
-		        	console.log('err : ' + err);
-		            myresult = await(err);
-
-		        }else{*/
-            console.log('Connected to postgres! Getting schemas...');
-		        
-            return client.query('SELECT firstname,lastname,email FROM salesforce.Lead')
-            		.then(function (result) {
-            		   console.log(result);
-				       return result.rowCount; // print user result;
-				    })
-				    .catch(function (error) {
-				    	console.log(error);
-				        return error; // print why failed;
-				    });
-                
-		    //    }
-		        
-
-		    //});
-
-		    //return myresult;
-
-		};
-		var o = doAsyncOp();
-		o.then(function(result){
-			console.log(result);
-			response.say(result);
-		})
-		//console.log(o.resolve);
-		//var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
-
-		/*var suspendable = async (function getData(back){
-            var myresult = 'initial'; 
-		    pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
-		        if (err) {
-		        	console.log('err : ' + err);
-		            myresult = await (back(err));
-
-		        }else{
-		            console.log('Connected to postgres! Getting schemas...');
-		        
-		            conn.query(
-		                'SELECT firstname,lastname,email FROM salesforce.Lead',
-		                function(err, result) {
-		                    if(err){
-	                    		console.log('err1 : ' + err);
-		                       	myresult = await ( back(err));
-		                    }
-		                    done();
-		                    console.log('result: ' + result.rows[0].firstname);
-		                    myresult = await (back(result.rows[0].firstname));
-		                    //done(); 
-		                    //return result.rows[0].firstname;
-		                }
-		            );    
-		        }
-		        
-
-		    });
-
-		    return myresult;
-		});
-		var suspendable4 = async.result (getData(function(data){
-								console.log('my data :' +  data);
-							    if(data != undefined) return data;
-							    return 'No result';
-							}));
 		
-		//console.log('s: ' + suspendable4);
-		response.say('some data');*/
-					
-		//console.log('data s : ' +s);	
-        //console.log('esxp ' + result.result);
-        //var rst = query.on('end').result;
-        //console.log(rst);
-
-        //if(result.rowCount == 0) response.say('data ' +result.rowCount);*/
-        
-		//response.say('data ');
-		//var data = FAADataHelper();
-		//console.log(data + ':data');
 		
-		/*client.connect(function(err) {
-			if (err) {
-				return callback(err, null);
-			}
+		function getdata() {
 			
-		}
+			return pg.connect(process.env.DATABASE_URL ,
+				function (err,conn,done) {
+			        if (err) {
+			            return console.log("not able to get connection "+ err);
+			        }
+			        console.log('Connected to postgres! Getting schemas...');
+			        
+			        var result = await (conn.query('SELECT firstname,lastname,email FROM salesforce.Lead'));
 
-		//var s = client.query("SELECT firstname,lastname,email FROM salesforce.Lead");
-		//console.log(s);*/
-		/*function getdata() {
-			return pgAsync.transaction(async (client )=> {
-			    var data;
-			    const sql = 'SELECT firstname,lastname,email FROM salesforce.Lead';
-			    data = await client.value(sql);	
-			    
-			    return data;
-			  });
-				return pg.connect(process.env.DATABASE_URL ,
-					function (err,client,done) {
-				        if (err) {
-				            return console.log("not able to get connection "+ err);
-				        }
-				        console.log('Connected to postgres! Getting schemas...');
-				        
-				        var result = await client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
+			        return result;
 
-				        return result;
-
-			    	}
-			    );
+		    	}
+		    );
 		}
 		//response.say(FAADataHelper.name);
 
 		getData(function(err,result){
 			console.log('result: '+ result);
-			console.log(response.say('data'));
-				response.say('data ' + result);
-			
-			
-		}.bind(this));*/
+						
+		});
 		
 
 		
