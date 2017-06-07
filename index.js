@@ -53,25 +53,25 @@ app.intent('saynumber',
 		    pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
 		        if (err) {
 		        	console.log('err : ' + err);
-		            myresult = await (back(err));
+		            myresult = back(err);
 
 		        }else{
 		            console.log('Connected to postgres! Getting schemas...');
 		        
-		            conn.query(
+		            await (conn.query(
 		                'SELECT firstname,lastname,email FROM salesforce.Lead',
 		                function(err, result) {
 		                    if(err){
 	                    		console.log('err1 : ' + err);
-		                       	myresult = await(back(err));
+		                       	myresult = back(err);
 		                    }
 		                    done();
 		                    console.log('result: ' + result.rows[0].firstname);
-		                    myresult = await (back(result.rows[0].firstname));
+		                    myresult = back(result.rows[0].firstname);
 		                    //done(); 
 		                    //return result.rows[0].firstname;
 		                }
-		            );    
+		            ));    
 		        }
 		        
 
