@@ -52,6 +52,7 @@ app.intent('saynumber',
              
 		    return pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
 		        if (err) {
+		        	console.log('err : ' + err);
 		            return await (back(err));
 
 		        }else{
@@ -61,9 +62,11 @@ app.intent('saynumber',
 		                'SELECT firstname,lastname,email FROM salesforce.Lead',
 		                function(err, result) {
 		                    if(err){
-		                       return await(back(err));
+	                    		console.log('err1 : ' + err);
+		                       	return await(back(err));
 		                    }
 		                    done();
+		                    console.log('result: ' + result.rows[0].firstname);
 		                    return await (back(result.rows[0].firstname));
 		                    //done(); 
 		                    //return result.rows[0].firstname;
