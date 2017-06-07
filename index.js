@@ -8,7 +8,7 @@ var pg = require('pg');
 var client = new pg.Client(process.env.DATABASE_URL);
 
 var app = new alexa.app( 'skill' );
-//var Promise = require('promise');
+var Promise = require('promise');
 //var pg = require('pg-async');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -46,32 +46,67 @@ app.intent('saynumber',
 		var number = request.slot('number');
 		var FAADataHelper = require('./salesforceconnect');
 		console.log(FAADataHelper.data);
+
+		function doAsyncOp () {
+			var myresult = 'initial'; 
+			/*pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
+		        if (err) {
+		        	console.log('err : ' + err);
+		            myresult = await(err);
+
+		        }else{*/
+            console.log('Connected to postgres! Getting schemas...');
+		        
+            return client.query('SELECT firstname,lastname,email FROM salesforce.Lead')
+            		.then(function (result) {
+            		   console.log(result);
+				       return result.rowCount; // print user result;
+				    })
+				    .catch(function (error) {
+				    	console.log(error);
+				        return error; // print why failed;
+				    });
+                
+		    //    }
+		        
+
+		    //});
+
+		    //return myresult;
+
+		};
+		var o = doAsyncOp();
+		o.then(function(result){
+			console.log(result);
+			response.say(result);
+		})
+		//console.log(o.resolve);
 		//var query = client.query('SELECT firstname,lastname,email FROM salesforce.Lead');
 
-		async (function getData(back){
+		/*var suspendable = async (function getData(back){
             var myresult = 'initial'; 
 		    pg.connect(process.env.DATABASE_URL , function (err,conn,done) {
 		        if (err) {
 		        	console.log('err : ' + err);
-		            myresult = back(err);
+		            myresult = await (back(err));
 
 		        }else{
 		            console.log('Connected to postgres! Getting schemas...');
 		        
-		            await (conn.query(
+		            conn.query(
 		                'SELECT firstname,lastname,email FROM salesforce.Lead',
 		                function(err, result) {
 		                    if(err){
 	                    		console.log('err1 : ' + err);
-		                       	myresult = back(err);
+		                       	myresult = await ( back(err));
 		                    }
 		                    done();
 		                    console.log('result: ' + result.rows[0].firstname);
-		                    myresult = back(result.rows[0].firstname);
+		                    myresult = await (back(result.rows[0].firstname));
 		                    //done(); 
 		                    //return result.rows[0].firstname;
 		                }
-		            ));    
+		            );    
 		        }
 		        
 
@@ -79,14 +114,14 @@ app.intent('saynumber',
 
 		    return myresult;
 		});
-
-		var s = getData(function(data){
+		var suspendable4 = async.result (getData(function(data){
 								console.log('my data :' +  data);
 							    if(data != undefined) return data;
 							    return 'No result';
-							});
-		console.log('s: ' + s);
-		response.say('some data');
+							}));
+		
+		//console.log('s: ' + suspendable4);
+		response.say('some data');*/
 					
 		//console.log('data s : ' +s);	
         //console.log('esxp ' + result.result);
