@@ -24,7 +24,7 @@ function getData(back){
                        back(err);
                     }
                     done();
-                    back(result.rows[0].firstname);
+                    await (back(result.rows[0].firstname));
                     //done(); 
                     //return result.rows[0].firstname;
                 }
