@@ -4,8 +4,8 @@ module.change_code = 1;
 var alexa = require( 'alexa-app' );
 var _ = require('lodash');
 //var pg = require('pg');
-var FAADataHelper = require('./salesforceconnect');
-var rp = require('request-promise');
+//var FAADataHelper = require('./salesforceconnect');
+//var rp = require('request-promise');
 //var Promise = require('promise');
 //var async = require('asyncawait/async');
 //var await = require('asyncawait/await');
@@ -17,6 +17,7 @@ var ENDPOINT ='https://season-developer-edition.ap2.force.com/services/apexrest/
 //var client = new pg.Client(process.env.DATABASE_URL);
 
 var app = new alexa.app( 'skill' );
+
 app.launch( function( request, response ) {
 	response.say( 'Welcome to your test skill' ).reprompt( 'Way to go. You got it to run. Bad ass.' ).shouldEndSession( false );
 } );
@@ -29,7 +30,7 @@ app.error = function( exception, request, response ) {
 	response.say( 'Sorry an error occured ' + error.message);
 };
 
-app.intent('saynumber',
+app.intent('sayNumber',
 	{
 		"slots":{"number":"AMAZON.NUMBER"}
 		,"utterances":[ 
@@ -41,11 +42,11 @@ app.intent('saynumber',
 	},
 	function(request, response) {
 	
-		var airportCode = request.slot('number');
-		var self = this;
-		var reprompt = 'Tell me an airport code to get delay information.';
+		var number = request.slot('number');
+		//var self = this;
+		var reprompt = 'say the number between one to hundred.';
 	    if (_.isEmpty(airportCode)) {
-	      	var prompt = 'I didn\'t hear an airport code. Tell me an airport code.';
+	      	var prompt = 'I didn\'t hear a number. Tell me a number.';
 	      	response.say(prompt).reprompt(reprompt).shouldEndSession(false);
 	      	return true;
 	    } else {
@@ -62,22 +63,38 @@ app.intent('saynumber',
 		        var prompt = 'I didn\'t have data for an airport code of ' + airportCode;
 		         //https://github.com/matt-kruse/alexa-app/blob/master/index.js#L171
 		        response.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
-		      });*/
+		      });
 			
-	      	//return false; 
+	      	return false; */
 
-	      	var request = require('sync-request');
-			var res = request('GET', ENDPOINT,{
-				timeout:3000
-			});
-			var s = JSON.parse(res.getBody());
-			console.log(s);
-			response.say(s);
-
-			
+	      	response.say('Hi, I got your number.you have ask for the number ' + number);
 
 	    }
 		
+    }
+);
+app.intent('todaysLead',
+	{
+		
+		"utterances":[ 
+			"get my today's leads",
+			"get my leads",
+			"my leads",
+			"leads"
+		]
+	},
+	function(request, response) {
+	
+		
+      	var request = require('sync-request');
+		var res = request('GET', ENDPOINT,{
+			timeout:5000
+		});
+		//console.log(res.getStatusCode());
+		var s = JSON.parse(res.getBody());
+		console.log(s);
+		response.say(s);
+
     }
 );
 
