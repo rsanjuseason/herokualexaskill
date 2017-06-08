@@ -19,7 +19,7 @@ var ENDPOINT ='https://season-developer-edition.ap2.force.com/services/apexrest/
 var app = new alexa.app( 'skill' );
 
 app.launch( function( request, response ) {
-	response.say( 'Welcome to your test skill' ).reprompt( 'Way to go. You got it to run. Bad ass.' ).shouldEndSession( false );
+	response.say( 'Welcome to your Salesforce.' ).reprompt( 'Way to go. You got it to run. Bad ass.' ).shouldEndSession( false );
 } );
 
 
