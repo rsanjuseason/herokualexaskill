@@ -45,12 +45,12 @@ app.intent('sayNumber',
 		var number = request.slot('number');
 		//var self = this;
 		var reprompt = 'say the number between one to hundred.';
-	    if (_.isEmpty(airportCode)) {
+	    if (_.isEmpty(number)) {
 	      	var prompt = 'I didn\'t hear a number. Tell me a number.';
 	      	response.say(prompt).reprompt(reprompt).shouldEndSession(false);
 	      	return true;
 	    } else {
-	      	var faaHelper = new FAADataHelper();
+	      	//var faaHelper = new FAADataHelper();
 	      	
 			/*faaHelper.requestAirportStatus(airportCode).then(function(airportStatus) {
 		        console.log(airportStatus);
@@ -85,15 +85,20 @@ app.intent('todaysLead',
 	},
 	function(request, response) {
 	
-		
-      	var request = require('sync-request');
-		var res = request('GET', ENDPOINT,{
-			timeout:5000
-		});
-		//console.log(res.getStatusCode());
-		var s = JSON.parse(res.getBody());
-		console.log(s);
-		response.say(s);
+		try{
+			var request = require('sync-request');
+			var res = request('GET', ENDPOINT,{
+				timeout:3000
+			});
+			//console.log(res.getStatus());
+			//res.statusCode();
+			var s = JSON.parse(res.getBody());
+			console.log(s);
+			response.say(s);
+		}catch(e){
+			response.say('Sorry, Some error occured ');
+		}
+      	return true;
 
     }
 );
